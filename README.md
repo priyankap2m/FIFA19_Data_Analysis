@@ -4,8 +4,8 @@ analysis. Assume that the dataset size as well as the frequency of load may incr
 future as FIFA’s daily delta datasets are available. Explain what you considered and the
 reason for your choice. 
 
-Solution: 
-Change Data Capture at Scale using Spark
+# Solution: 
+Change Data Capture  using Spark
 
 This pattern is fundamentally based upon calculating a deterministic hash of the key and non-key attribute(s), and then using this hash as the basis for comparison. The hashes are stored with each record in perpetuity as the pattern is premised upon immutable data structures (such as HDFS, S3, GCS, etc). The pattern provides distillation and reconstitution of data during the process to minimize memory overhead and shuffle I/O for distributed systems, as well as breaking the pattern into discrete stages (designed to minimize the impact to other applications). This pattern can be used to process delta or full datasets.
 
@@ -59,7 +59,7 @@ Produces the following output:
 |        I| 2000|
 +---------+-----+
 
-Determine UPDATEs or Unchanged Records
+# Determine UPDATEs or Unchanged Records
 Again, referring to the previous full outer join, keys which exist in both the incoming and current datasets must be either the result of an UPDATE or they could be unchanged. To determine which case they fall under, compare the non key hashes. If the non key hashes differ, it must have been a result of an UPDATE operation at the source, otherwise the record would be unchanged.
 
 Tag these records as U or N respectively with an EFF_START_DATE of the business effective date (in the case of an update - otherwise maintain the current EFF_START_DATE), rejoin these records with their full attribute payload from the incoming dataset, then write out these records to the current and historical partition in append mode.
